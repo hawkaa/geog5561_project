@@ -106,14 +106,16 @@ Another important part is the data of the ISP's existing network infrastructure.
 \end{figure}
 Since we have data from many different sources, they would need to be combined before starting the analysis. Because we would like to have as fine grained data as possible, we would like our sorce tables to be individual parcels or businesses. We would then have to combine this fine-granularity data with the other data which is more coarse-grained. An easy way of doing this would be to do use the overlay technique Intersect. The result of this would be the coarser grained data split into smaller pieces and combined with the businesses or parcels, effectively expanding the source tables with new attributes. Please see Figure~\ref{fig:intersect} for how the intersect operation works.
 
-It is however very important to be aware of the pitfalls by combining coarse grained information with fine grained. For example, all households would be assigned an average income. However, this income does not reflect the average income of the house, it is still the average income of the census tract the household belongs to. This needs to be taken into consideration when analysing the data. However, if the data sources are split up differently, you will get a tighter classification of each parcel. For intance, you can have two households with the same income (because they are in the same census tract), but have different number of broadband suppliers, because the National Broadband Map splits up its blocks differently that the US Census.
+It is however very important to be aware of the pitfalls by combining coarse grained information with fine grained. For example, all households would be assigned an average income. However, this income does not reflect the average income of the house, it is still the average income of the census tract the household belongs to. This needs to be taken into consideration when analysing the data. However, if the data sources are split up differently, you will get a tighter classification of each parcel. For instance, you can have two households with the same income (because they are in the same census tract), but have different number of broadband suppliers, because the National Broadband Map splits up its blocks differently that the US Census.
 
 
-The ISPs network infrastructure might not be documented spatially. Depending on the format of the current documentation, getting the required vector data might include:
+Additionally, the ISPs network infrastructure might not be documented spatially. Depending on the format of the current documentation, getting the required vector data might include:
 \begin{itemize}
   \item If the network is documented on paper maps with drawing and sketches, these maps would need to be scanned and georeferenced. Since we need vector data, manual digitizing of relevant map features like boxes, cables and connectors might need to be digitized/extracted manually.
   \item If the network is documented non-spatially, like in a spreadsheet, all relevant points would have to be geocoded. The documentation might already include coordinates. This would require us to convert the aspatial table to a spatial one using the x and y attributes. If the documentation does not coordinates, but rather addresses, we could look these addresses up and put each point into the map based on the result. Getting the cables into the map would require some logical analysis of where to find the endpoints. Once found, cables could be drawn as lines in the map between the already geocoded points.
 \end{itemize}
+
+Lastly, due to technicalities explained in Section \ref{sec:Methods}, we would like all of our household and businesses to be points rather than polygons. This transformation would simply replace the polygon of each feature with the centroid point.
 
 
 \section{Potential and profitability}
@@ -143,7 +145,7 @@ One could also use the Esri Tapestry Segmentation directly. This data provides a
 
 \subsection{Business potential}
 \label{sub:Businesses}
-The research for project have not been able to find any sources on business potential whet it comes to broadband connections. One could still normal intuition to do a profitiability assessment. The more employees, the higher demand for a good internet connection. In addition, high yearly revenue will also be an indicator of purchasing power.
+The research for project have not been able to find any sources on business potential when it comes to demand for high speed internet connections. One could still normal intuition to do a profitiability assessment. The more employees, the higher demand. In addition, high yearly revenue will also be an indicator of purchasing power.
 
 \subsection{Profitability}
 \label{sub:Profitability}
@@ -152,40 +154,88 @@ Even though the customers are potential and have high purchasing power, they mig
 
 Another aspect of customer profitability is the precence of other broadband providers in the area. If the households or businesses are ranked as very potential customers, it's very likely some other ISPs already supply broadband connections to them. Expanding the network in that area would be associated with high risk. It's not very likely that the customers would like to change a broadband supplier they're already satisfied with, and more so paying the initial cost of installing a new connection. The competitors network documentation are normally classified. Luckily, whe have access to the data from the National Broadband Map. Areas with none or few providers can be ranked higher than areas with much competition, as well as areas with lower speed and old technology.
 
-\section{Methods, data presentation and analysis}
+\section{Data presentation and analysis}
 \label{sec:Methods}
-Paragraph about why we don't want to do more now, and let the operator do the most.
+As we now have all the data we need, and we know what to look for, we can start the analysis. Map visualization is necessary for this job due to our particular interest of finding clustered customers, hopefully close to existing network infrastructure. Since there are so many factors contributing to asssesing profitability for potential customers, it's best to make use of the human brain's excellent ability to extract context and information of nosiy data. Therefore the system will do nothing more than providing the best possible visualization techniques such that a human GIS operator can do a quality assessment of where to extend the ISPs network.
+
+The system will be an interactive map in a GIS software with switches an value sliders for controling the visualization output. Adjusting any of the parameters would immediatly change the map, giving the GIS operator instant feedback on the changes performed. The filters and visualization techniques will be described in the following subsections.
+
+\subsection{Filtering potential}
+\label{sub:Filtering potential}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.35\textwidth]{img/household.png}
+  \caption{Panel for filtering housholds.}
+  \label{fig:household}
+\end{figure}
+For filtering the potential households, the GIS operator will be provided with three value sliders representing thresholds for income, age and education. In addition to this, the operator will be able to select how these values are combined. More specifically, combining the values with the logical OR-operator would display parcels which fall in to either of the specified categories, and the logical AND-operator would only display households which are within all three thresholds. Figure~\ref{fig:household} shows a potential interface of filter parameters of households.
+
+For businesses, the same techniques as for parcels would be used, except for the change of profitability attributes. The software would supply sliders for number of employees and total revenue, and provide the same AND/OR switch.
+
+The result of this step is a reduced set of parcels and businesses shown in the map.
+\subsection{Competitors}
+\label{sub:Competitors}
+As previously discussed, areas where competitors already are providing broadband are associated with high risk and low profitability. To address this issue, the GIS is provided with two more thresholds: Number of ISPs in the area and average connection speed, both of which attributes are from the National Broadband Map. Areas with fewer competitors might be easier to enter, and households and businesses with low internet speeds are more likely to upgrade to a better ISP.
+
+\subsection{Proximity to existing network infrastructure}
+\label{sub:Proximity to existing network infrastructure}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{img/buffer.png}
+  \caption{The buffer operation. Create buffer polygons around the input features. Courtesy of \cite{noauthor_undated-ar}.}
+  \label{fig:buffer}
+\end{figure}
+The GIS operator now displays households and businesses with high potential for areas with limited competition from other ISPs. In order to find the customers close to existing network infrastructure, a GIS technique called buffer will be used. This technique, as Figure \ref{fig:buffer} shows, is meant create buffer polygon of a certain distance around the existing network, where the distance is specified with yet another slider in the GIS operator's control. The buffer polygons will not be visible, but rather used to filter households and businesses so the map only displays the ones that intersect the buffer, that is the potential customers within the given range of the existing netwok infrastructure.
+
+\subsection{Customer clustering}
+\label{sub:Customer clustering}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{img/heatmap.png}
+  \caption{Heatmap: Source (to be fixed): https://www.drupal.org/files/snapshot15.png}
+  \label{fig:heatmap}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.40\textwidth]{img/dbscan.png}
+  \caption{Density-based clustering. Courtesy of \cite{Wikipedia_contributors2014-qv}.}
+  \label{fig:dbscan}
+\end{figure}
+With all the filters in place, we are now studying the clustering of the remaining customers. This can be done already by simply inspecting the map, looking for several households or businesses in the same area. Depending on how large area is analysed, this process can be tedious and necessarily not accurate. This project therefor proposes two related techniques to aid the operator to find customer clusters. Both techniques rely on mathematical cluster analysis \cite{Wikipedia_contributors2014-qv}, the task of grouping a set of objects in such way that objects in the same group, or cluster, are more similar than those of other clusters.
+
+The first technique is to visualize the clusters as a heat map, like shown in Figure \ref{fig:heatmap}. In this technique, each point, or customer, will contribute with color gradient to the heat map. The more points in the proximity of each other, the stronger the color, and will result in a map where clusters are represented in a stronger color.
+
+The second one is to use mathematical cluster analysis \cite{Wikipedia_contributors2014-qv}, the task of grouping a set of objects in such way that objects in the same group, or cluster, are more similar than those of other clusters. A way to to it would be to use a density-based clustering algorithm, more specifically algorithms that define clusters where points have higher density are grouped together, and outliers are normally considered as noise and discarded. See Figure \ref{fig:dbscan}. In a map, this could be visualized by coloring each cluster differently and adding labels of how many items in the cluster to bring the operators attention to the best area.
+
+None of the visualization techniques need any input parameters, but the operator must be able to turn them on or off.
+
+\subsection{Data analysis}
+\label{sub:Data analysis}
+The GIS operator is now equipped with several filters to adjust. The operator would start with all thresholds at maximum position, gradually restricting one attribute at a time, seeing how that affects the range of potential customers. This is a process of trial and error.
 
 
+\subsection{Profitability score: An alternate method}
+\label{sub:Profitability score: An alternate method}
+The problem by the current method is that it might completely disregard highly potential customers with only one attribute outside the threshold. An example of this is a cluster of 100 households with only one, slow internet provider, which is located outside the distance bounds of the existing network infrastructure. Even though the cluster is outside the initial bounds, it would possibly still be worthwile to dig the extra distance because the customers scores really high on other potential attributes.
 
-\paragraph{Representing potential}
-\label{par:Representing potetnial}
+A technique to avoid this situation, would be to pre-calculate a profability score for each business and household. The score would be a formula consisting of all the attributes, and is thought to be normalized, so the most profitable customer has a score of 100\%. The formula will use a linear combination of the input variables, so even though one attribute value is low, it can still get a good score if the rest are good. The GIS operator would then be able to filter this score instead of the individual attributes, effectively avoiding the problem from the previous paragraph. Additionally, this method would be more suitable for pure computer analysis, because the only adjustable parameter here would be the profitability score.
 
-
-Could also use a score. This would require careful analysis of how to weight the different stuff. A relevant discussion about this is included later in the section
-
-\paragraph{Filtering areas with many competitors}
-\label{par:Filtering areas with many competitors}
-same as above
-
-\paragraph{Close to current infrastructure}
-\label{par:Close to current infrastructure}
-
-\paragraph{Finding clustered customers}
-\label{par:Finding clustered customers}
-K-means, heatmap.
-
-
-
-We have all our relevant attributes and know what to look for. 
+The major downside of this method is the calculation of the profitability score. The formula would need to be carefully crafted so that each attribute weighs in differently. Finding these weights, however, is non-trivial. There's no way one can know in advance how much each attribute should contribute to the final score, so these weights would have to be adjustable. This could be done by providing the GIS operator with sliders, but it is however needless to say that these are far less intuitive than the threshold sliders in the original solution.
 
 
 \section{Risk assesment and potential pitfalls}
 \label{sec:Risk assesment and potential pitfalls}
-
+Yet to be completed. Should contain information about:
+\begin{itemize}
+  \item General data accuracy, specifically addressing the census data.
+  \item Temporal accuracy of the national broadband map
+  \item There's a chance we're looking at the wrong attributes.
+\end{itemize}
 
 \section{Conclusion}
 \label{sec:Conclusion}
+Summarizing, concluding that GIS is suited for this analysis.
+
 
 \printbibliography
 
