@@ -1,0 +1,74 @@
+\documentclass[twocolumn]{article}
+
+\usepackage{parskip}
+\usepackage{titling}
+\usepackage[backend=bibtex,
+style=numeric
+]{biblatex}
+\addbibresource{../bibliography}
+
+% Document metadata
+\title{
+    GEOG 5551 Term project: Paper outline\\
+    Using a geographical information system to minimize risk and maximize profitability for internet service providers
+}
+\author{
+    Aamdal, Haakon\\
+    \texttt{aamda001@umn.edu}
+}
+
+
+% Margins
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.5in
+\headsep=0.25in
+\setlength{\droptitle}{-4em} 
+\begin{document}
+\maketitle
+
+\textbf{This document contains the preliminary outline of my term project paper in GEOG 5561. The contents of each section are subject to change based on feedback and other observations throughout the project period. This document assumes knowledge of previous deliverables, more specifically the project statement and intake assignment.}
+
+
+\section{Introduction}
+\label{sec:Introduction}
+This section will be pretty much the same as the intake assigment. It will reference the white paper published by Bell Labs \cite{Bell_Labs2013-st} telling about the forecasted increase in internet connection demand and the low margins for profit. It will address the significance of finding the customers with the most potential.
+
+The intake assignment did mention that customer profitability are dependent on other factors like existing infrastructure and customer clustering. This section will have to elaborate on this, explaining why this is the case. The main focus here will be to provide relevant information about the cost of connecting new customers to existing infrastructure.
+
+\section{Data}
+\label{sec:Data}
+One part of the data section will be about the network data requirements. Since my potential customer is an ISP, this section will address which requirements are to be put on the documentation of their current network infrastructure. It might happen that the network is not documented spatially, so this section should also briefly address techniques for aquiring the required spatial attributes.
+
+The second part of this section will regard data about the potential customers. It will elaborate on where to find relevant data about housing units, and possibly at what cost. I've recently become aware of data from the US Census, which I will explain how can be used in the application.
+
+\section{Methods}
+\label{sec:Methods}
+This section will focus on how to use the data aquired in the previous section. It will elaborate on which household attributes are the most relevant for customer profitability assessment, hopefully referencing some relevant sources.
+
+After concluding which attributes are the most relevant, this section will continue explaining how to use fuzzy classification, like in Lab 8, to give every houshold a score. It will discuss how to use single attributes as well as assigning every houshold a distance from the nearest infrastructure connection point. 
+
+
+\section{Data presentation and analysis}
+\label{sec:Data presentation and analysis}
+Since data analysis is based on the visualization and not the other way around, these sections have now been merged.
+
+With the data and an idea of how the most profitable customers are classified, this section will explain how to display these points in a map. It will discuss different ways of visualising profitability, ranging from labels with score to color codes and heatmaps. As advised, there's lots of work being done in GIS and cartography using such techniques, so hopefully the paper will reference some good sources on the topic.
+
+The section will also explain the map interactivity, which allows for different visualizations and adjustments of profitability parameters. Being able to interactivily adjust the map is an important part of the data analysis, since the operator can easily visualize different trade-offs in parameters. After all, it's the human expert that decides where to extend the network, the system is only there to intuitively present the most relevant information.
+
+
+\section{Risk assesment an potential pitfalls}
+\label{sec:Risk assesment an potential pitfalls}
+Even though this section is not mentioned in the project specification, I still think it's worth addressing potential risks for my customer. The problems mentioned in the intake assignment should be mentioned here, in addition to other pitfalls that have been discovered during the research.
+
+\section{Conclusion}
+\label{sec:Conclusion}
+Summarization of the paper.
+
+\printbibliography
+
+\end{document}
