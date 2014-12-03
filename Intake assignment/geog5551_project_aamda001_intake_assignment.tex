@@ -1,0 +1,48 @@
+\documentclass{article}
+
+\usepackage{parskip}
+\usepackage{titling}
+\usepackage[backend=bibtex,
+style=numeric
+]{biblatex}
+\addbibresource{bibliography}
+
+% Document metadata
+\title{
+    GEOG 5551 Term Project: Intake assignment\\
+    Using a geographical information system to minimize risk and maximize profitability for internet service providers
+}
+\author{
+    Aamdal, Haakon\\
+    \texttt{aamda001@umn.edu}
+}
+
+
+% Margins
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.5in
+\headsep=0.25in
+\setlength{\droptitle}{-4em} 
+\begin{document}
+\maketitle
+
+According to a white paper published by Bell Labs \cite{Bell_Labs2013-st} on internet traffic growth, the end-user internet connection traffic demand is forecasted to increase by 3.7 from 2012 to 2017. Nearly all of the demand is forecasted to come from residental and business fixed internet connections. There's over 30 internet service providers (ISPs) in the United States \cite{noauthor_undated-uf}, resulting in a highly competitive market with low margins of profit. This project will aim to increase profit for an imaginary internet service provider (ISP) by using a geographical information system. The system proposed in this project will use existing data about the ISP's network and combine them with demographic data and other attributes of interest in order to minimize risk and maximize profit when extending the network for new customers.
+
+In order to know where to put sales and marketing resources, a company who provides services to businesses and end users will always need to know where to find its customers. Even though this "place" can be anywhere (websites, football games, public forums etc.), a large subset of these companies, including ISPs, are interested in the actual physical location. This makes it suitable for a geographical information system. Finding new subscribers for fibre and coaxial connections require some extra attention, due to the fact that profitability are dependent on existing infrastructure and clustering of potential customers.
+
+The system proposed in this project is initially thought to work in the following manner:
+\begin{itemize}
+    \item Give each business and household a score that reflects the potential of the customer using relevant attributes. For a household this might be a combination of the average income and number of residents, for a business this might be the number of employees combined with the company's net worth.
+    \item Visualize all the potential customers in a map. Add an adjustable score threshold to show households and businesses exceding the threshold. Add another threshold to filter customers based on the distance from nearby network infrastructure.
+    \item Apply visualization techniques, like a heatmap, so a manual GIS operator can do an informed risk and profitability assessment of potential areas to extend the network.
+\end{itemize}
+As this is only the intake assigment, the specifics of the application are to be researched further, which might result in adjustments to the initial system.
+
+Potential limitations and pitfalls of this application can be split into two parts. The first part is the feasability of the project itself. The system is dependent on a good data quality of the already exisisting network. It is also dependent on the availability of good demographic data with the attributes required to give profitability scores of potential customers. The second part is even with high quality data, the system might not produce the expected result. There might be other factors outside the scope of this research project which are equally relevant for a risk and profitability assessment.
+\printbibliography
+
+\end{document}
